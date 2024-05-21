@@ -35,23 +35,23 @@ sellCondition = conditional(buffer1 < buffer2 and buffer1[1] > buffer2[1] and no
 sellCondition = conditional(buffer1 < buffer2 and buffer1[1] > buffer2[1] )
             plot_shape(
                 (buyCondition),
-                "B",
+                "UP",
                 shape_style.triangleup,
                 shape_size.huge,
                 colorBuy,
                 shape_location.belowbar,
                 -1,
-                "B",
+                "UP",
                 "white"
                ) 
           plot_shape(
               (sellCondition),
-                "S",
+                "Down",
                 shape_style.triangledown,
                 shape_size.huge,
                 colorSell,
                 shape_location.abovebar,
                 -1,
-                "S",
+                "Down",
                 "white"
           )
