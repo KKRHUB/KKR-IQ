@@ -1,0 +1,68 @@
+-----------------------------------------------------------------
+---- CREATE BY "Chat GPT X KKR" --------------------------------
+
+
+instrument { name = "KKR HUB",
+             icon="indicators:ADX",
+             overlay = true }
+
+
+-- Setting Display --
+input_group {
+   "KKR HUB",
+   visible = input { default = true, type = input.plot_visibility }
+}
+input_group {
+   "Color Arrow",
+   colorBuy = input { default = "#28a33b", type = input.color },
+   colorSell = input { default = "#ca6f11", type = input.color }
+}
+
+-- Buffer --
+
+fastMA = ema(close, 4)
+slowMA = ema(close, 9)
+macd = fastMA - slowMA
+signal = ema(macd, 3)
+hist = macd - signal
+
+-- Condition Signal's --
+
+buySignal = macd > signal and macd[1] < signal[1] and macd[2] < signal[2]
+sellSignal = macd < signal and macd[1] > signal[1] and macd[2] > signal[2]
+
+buyWin = macd[1] > signal[1] and macd[2] < signal[2] and macd[3] < signal[3] and close > close[1]
+sellWin = macd[1] < signal[1] and macd[2] > signal[2] and macd[3] > signal[3] and close < close[1]
+
+-- Display --
+if visible then
+plot_candle {open,high,low,close,"Candle","#ffffff"}
+            plot_shape(buySignal,
+                "CALL",
+                shape_style.arrowup,
+                shape_size.huge,
+                colorBuy,
+                shape_location.belowbar,
+                0,
+                "",
+                colorBuy
+                      )
+            plot_shape(sellSignal,
+                "PUT",
+                shape_style.arrowdown,
+                shape_size.huge,
+                colorSell,
+                shape_location.abovebar,
+                0,
+                "",
+                colorSell
+                      )
+
+    if buySignal or buyWin then
+        plot_candle {open,high,low,close,"Candle",colorBuy}
+    end
+    if sellSignal or sellWin then
+        plot_candle {open,high,low,close,"Candle",colorSell}
+    end
+
+end
